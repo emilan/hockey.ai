@@ -38,7 +38,7 @@ public class Reciever extends Thread{
 				e.printStackTrace();
 			}
 			byte[] pos = rcv.getData();
-			// Om servern frågar skicka -1 först annars skicka data
+
 			if(pos[0] == 'D')// Servern frågar om du är död!
 			{
 				byte no = (byte)'N';

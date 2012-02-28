@@ -68,7 +68,8 @@ public abstract class AIBase implements Updateable{
 	}
 	@Override
 	public void update(int[] a) {	
-		int i=0;
+		int i=2;
+		// TODO: My goals in a[0], Opponent goals in a[1]
 		puck.setState(a[i++], a[i++]);
 		gameTime=a[i++];
 	

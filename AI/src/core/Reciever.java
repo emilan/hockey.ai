@@ -48,7 +48,7 @@ public class Reciever extends Thread{
 					u.answer(no);//
 				}
 			}
-			else if (length == 27 * 4)
+			else if (length == 29 * 4)
 			{
 			//
 				int[] a = bytesToInts(pos);

@@ -38,8 +38,9 @@ public class Reciever extends Thread{
 				e.printStackTrace();
 			}
 			byte[] pos = rcv.getData();
+			int length = rcv.getLength();
 
-			if(pos[0] == 'D')// Servern frågar om du är död!
+			if(length == 1 && pos[0] == 'D')// Servern frågar om du är död!
 			{
 				byte no = (byte)'N';
 				for(Updateable u:toUpdate){
@@ -47,20 +48,30 @@ public class Reciever extends Thread{
 					u.answer(no);//
 				}
 			}
-			else
+			else if (length == 27 * 4)
 			{
 			//
-				int[] a = new int[rcv.getLength() / 4];
-				for (int i = 0; i < rcv.getLength() / 4; i++) {
-					for (int j = 0; j < 4; j++) {
-						a[i] += (pos[4 * i + j] & 0xff) << (8 * j);
-					}
-				}
+				int[] a = bytesToInts(pos);
 				for(Updateable u:toUpdate){
 					u.update(a);
 				}
 			}
+			else if (length % (5 * 4) == 0) {
+				int[] a = bytesToInts(pos);
+				for(Updateable u : toUpdate){
+					u.failed(a);
+				}
+			}
 		}
+	}
+	private int[] bytesToInts(byte[] pos) {
+		int[] a = new int[rcv.getLength() / 4];
+		for (int i = 0; i < rcv.getLength() / 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				a[i] += (pos[4 * i + j] & 0xff) << (8 * j);
+			}
+		}
+		return a;
 	}
 	void addUpdateable(Updateable u){
 		toUpdate.add(u);

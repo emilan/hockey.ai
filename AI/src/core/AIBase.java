@@ -62,6 +62,11 @@ public abstract class AIBase implements Updateable{
 		catch(IOException e){}
 	}
 	@Override
+	public void failed(int[] a) {
+		// Do nothing. 
+		// TODO: Do something...
+	}
+	@Override
 	public void update(int[] a) {	
 		int i=0;
 		puck.setState(a[i++], a[i++]);

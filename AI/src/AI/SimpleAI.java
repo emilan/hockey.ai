@@ -33,13 +33,13 @@ public class SimpleAI extends AIBase {
 		contentPane = frame.getContentPane();
 		frame.setSize(1200, 800);
 		frame.add(new GameTable(this));
-		// TODO Auto-generated constructor stub
+		// TODO Auto-generated constructor stub*/
 	}
 
 	public static void main(String[] arg) throws IOException {
 		SocketAddress gameAddress = new InetSocketAddress("S2007", 60040);
 
-		SimpleAI m = new SimpleAI(60090, gameAddress);
+		ConsoleAI m = new ConsoleAI(60090, gameAddress);
 
 		SimpleAI d = new SimpleAI(60089, gameAddress);
 
@@ -47,7 +47,10 @@ public class SimpleAI extends AIBase {
 
 	@Override
 	public void onNewState() {
-		frame.repaint();
+		try {
+			frame.repaint();
+		}
+		catch (Exception e) {}
 		//System.out.println("ai");
 		doAI();
 		//System.out.println("ai");

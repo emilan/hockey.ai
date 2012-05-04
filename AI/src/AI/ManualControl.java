@@ -133,8 +133,9 @@ public class ManualControl extends AIBase implements KeyListener {
 
 	@Override
 	public void onNewState() {
-		frame.repaint();
-		
+		try {
+			frame.repaint();
+		} catch (Exception e) {}		
 	}
 
 }

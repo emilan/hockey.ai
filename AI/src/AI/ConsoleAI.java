@@ -29,17 +29,22 @@ public class ConsoleAI extends AIBase {
 		System.out.println("Format: team(0-1) id(0-5) transSpeed(0-255) transDest(0-255) rotSpeed(-128-127) rotDest(0-255)");
 		
 		while (true) {
-			int a = sc.nextInt();
-			int id = sc.nextInt();
-			int transSpeed = sc.nextInt();
-			int transDest = sc.nextInt();
-			int rotSpeed = sc.nextInt();
-			int rotDest = sc.nextInt();
+			String s = sc.nextLine();
+			Scanner sc2 = new Scanner(s);
+			while (sc2.hasNextInt()) {
+				int a = sc2.nextInt();
+				int id = sc2.nextInt();
+				int transSpeed = sc2.nextInt();
+				int transDest = sc2.nextInt();
+				int rotSpeed = sc2.nextInt();
+				int rotDest = sc2.nextInt();
+				
+				ConsoleAI ai = a == 1 ? d : m;
+				ai.addOrder(new PrimitiveOrder(id, transSpeed, transDest, rotSpeed, rotDest));
+			}
 			
-			ConsoleAI ai = a == 1 ? d : m;
-			ai.addOrder(new PrimitiveOrder(id, transSpeed, transDest, rotSpeed, rotDest));
-			ai.send();
-			System.out.println();
+			d.send();
+			m.send();
 		}
 	}	
 }

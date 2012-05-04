@@ -21,7 +21,7 @@ public class PlayerRepresentation {
 		Graphics2D g2d = (Graphics2D) g.create();
 	    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	    g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-	    g2d.translate(-player.getLocation().getX(), -player.getLocation().getY());
+	    g2d.translate(player.getLocation().getX(), player.getLocation().getY());
 	    g2d.rotate(Math.toRadians(player.getCurrentRot()));
 	    //g2d.scale(scale, scale);
 	    g2d.fill(rec);

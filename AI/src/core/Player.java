@@ -3,6 +3,7 @@ package core;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 import java.awt.geom.Point2D;
 import java.awt.Point;
@@ -30,7 +31,7 @@ public class Player {
 	void setState(int pos,int rot){
 		this.currentRot=rot*360/255;
 		this.currentPos=pos;
-		location=path.getCoordinate(pos);
+		this.location=path.getCoordinate(pos);
 	}
 	
 	
@@ -48,15 +49,15 @@ public class Player {
 	}
 	Vector[] getPathPoints(int id,Team team){
 		Vector[] points=null;
-		if(team==Team.HOME){
-			id+=6;
-		}
+		int teamId = team == Team.HOME ? 0 : 1;
 		ArrayList<Vector> x = new ArrayList<Vector>();
 		try {
-			Scanner fileScan = new Scanner(new File("src/resources/player"+id+".txt"));
+			String fileName = String.format("src/resources/player%d%d.txt", teamId, id);
+			Scanner fileScan = new Scanner(new File(fileName));
+			fileScan.useLocale(Locale.US);
 			
 			while(fileScan.hasNext()) {
-				x.add(new Vector(-fileScan.nextInt(), fileScan.nextInt()));
+				x.add(new Vector(fileScan.nextDouble(), fileScan.nextDouble()));
 			}
 			points=new Vector[x.size()];
 			

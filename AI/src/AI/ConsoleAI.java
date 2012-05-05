@@ -3,6 +3,7 @@ package AI;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import core.AIBase;
@@ -31,20 +32,25 @@ public class ConsoleAI extends AIBase {
 		while (true) {
 			String s = sc.nextLine();
 			Scanner sc2 = new Scanner(s);
-			while (sc2.hasNextInt()) {
-				int a = sc2.nextInt();
-				int id = sc2.nextInt();
-				int transSpeed = sc2.nextInt();
-				int transDest = sc2.nextInt();
-				int rotSpeed = sc2.nextInt();
-				int rotDest = sc2.nextInt();
+			try {
+				while (sc2.hasNextInt()) {
+					int a = sc2.nextInt();
+					int id = sc2.nextInt();
+					int transSpeed = sc2.nextInt();
+					int transDest = sc2.nextInt();
+					int rotSpeed = sc2.nextInt();
+					int rotDest = sc2.nextInt();
+					
+					ConsoleAI ai = a == 1 ? d : m;
+					ai.addOrder(new PrimitiveOrder(id, transSpeed, transDest, rotSpeed, rotDest));
+				}
 				
-				ConsoleAI ai = a == 1 ? d : m;
-				ai.addOrder(new PrimitiveOrder(id, transSpeed, transDest, rotSpeed, rotDest));
+				d.send();
+				m.send();
 			}
-			
-			d.send();
-			m.send();
+			catch (NoSuchElementException e) {
+				System.out.println("Invalid input");
+			}
 		}
 	}	
 }

@@ -220,4 +220,67 @@ public class ControllablePlayer extends Player {
 		parent.send();
 	}
 
+	private long lastOrder = 0;
+	public PrimitiveOrder actLikeGoalGuard() {
+		Vector vecPuck = new Vector(puck.getX(), puck.getY());
+		Vector vecGoal;
+		if (team == Team.HOME)
+			vecGoal = new Vector(-284, 0);
+		else vecGoal = new Vector(284, 0);
+		
+		double x1 = vecGoal.getX();
+		double y1 = vecGoal.getY();
+		double x2 = vecPuck.getX();
+		double y2 = vecPuck.getY();
+		
+		double x3 = path.getCoordinate(0).getX();
+		double y3 = path.getCoordinate(0).getY();
+		double x4 = path.getCoordinate(255).getX();
+		double y4 = path.getCoordinate(255).getY();
+		
+		double x = (y1 - y3 + (y4 - y3) / (x4 - x3) * x3 - (y2 - y1) / (x2 - x1) * x1) / ((y4 - y3) / (x4 - x3) - (y2 - y1) / (x2 - x1));
+		double y = (y2 - y1) / (x2 - x1) * (x - x1) + y1;
+		
+		Vector vecIntersection = new Vector(x, y);
+		double minDistance = Double.MAX_VALUE;
+		int minDistanceIndex = -1;
+		for (int i = 0; i < 255; i++) {
+			double distance = path.getCoordinate(i).subtract(vecIntersection).norm();
+			if (distance < minDistance) {
+				
+				minDistance = distance;
+				minDistanceIndex = i;
+			}
+		}
+		
+		long time = System.currentTimeMillis();
+		
+		Vector myLocation = getLocation();
+		double distance = myLocation.subtract(vecPuck).norm();
+		if (distance < 40) {
+			if (time - lastShot > 100) {
+				if ((team == Team.AWAY && vecPuck.getY() > 0) || 
+					(team == Team.HOME && vecPuck.getY() < 0))
+					rotSpeed = -127;
+				else rotSpeed = 127;
+				
+				lastShot = time;
+			}
+			else return null;
+		}
+		else {		
+			if (time - lastOrder < 100)
+				return null;
+			
+			lastOrder = time;
+			
+			targetPos = minDistanceIndex;
+			transSpeed = 50;
+			targetRot = 0;
+			rotSpeed = 50;
+		}
+		
+		return getOrder();
+	}
+
 }

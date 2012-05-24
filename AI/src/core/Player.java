@@ -17,6 +17,7 @@ public class Player {
 	
 	PlayerPath path;
 	Puck puck;
+	Team team;
 	Player(int i){
 		id=i;
 		Vector[] pathPoints=getPathPoints(i,Team.HOME);
@@ -24,6 +25,7 @@ public class Player {
 	}
 	Player(int i,AIBase base,Team team){
 		id=i;
+		this.team = team;
 		this.puck=base.getPuck();
 		Vector[] pathPoints=getPathPoints(i,team);
 		path=new PlayerPath(pathPoints);

@@ -39,7 +39,7 @@ public class SimpleAI extends AIBase {
 	public static void main(String[] arg) throws IOException {
 		SocketAddress gameAddress = new InetSocketAddress("S2007", 60040);
 
-		ConsoleAI m = new ConsoleAI(60090, gameAddress);
+		SimpleAI m = new SimpleAI(60090, gameAddress);
 
 		SimpleAI d = new SimpleAI(60089, gameAddress);
 
@@ -59,10 +59,10 @@ public class SimpleAI extends AIBase {
 	public void doAI() {
 		//System.out.println(getPuck());
 		for (ControllablePlayer cp : this.getFriendlyPlayers()) {
-			//ControllablePlayer cp=this.getFriendlyPlayers().get(1);
-			this.addOrder(cp.scootAndShoot());
-			
-	}
+			if (cp.getId() == 0)
+				this.addOrder(cp.actLikeGoalGuard());
+			else this.addOrder(cp.scootAndShoot());
+		}
 		try {
 			send();
 		} catch (IOException e) {

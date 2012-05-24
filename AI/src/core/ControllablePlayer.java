@@ -80,11 +80,25 @@ public class ControllablePlayer extends Player {
 			transSpeed = 50;
 		} 
 		else {
-			double distance = getLocation().subtract(puckVec).norm();
+			Vector myLocation = getLocation();
+			double distance = myLocation.subtract(puckVec).norm();
 			if (distance < 60) {
 				long time = System.currentTimeMillis();
 				if (time - lastShot > 500) {
-					rotSpeed = -127;
+					Vector headingVector = getHeadingVector();
+					Vector puckRelativeVector = puckVec.subtract(myLocation);
+					double angle = 
+						Math.atan2(puckRelativeVector.getX(), puckRelativeVector.getY()) 
+						- Math.atan2(headingVector.getX(), headingVector.getY());
+					while (angle < 0)
+						angle += 2 * Math.PI;
+					while (angle > 2 * Math.PI)
+						angle -= 2 * Math.PI;
+					
+					if (angle < Math.PI)
+						rotSpeed = -127;
+					else rotSpeed = 127;
+					
 					lastShot = time;
 				}
 				else return null;
@@ -100,6 +114,14 @@ public class ControllablePlayer extends Player {
 		 * if(targetRot<0){ targetRot+=360; } }
 		 */
 		return getOrder();
+	}
+	
+	public Vector getHeadingVector() {
+		int position = getCurrentPos();
+		int maxIndex = Math.min(position + 2, 255);
+		int minIndex = Math.max(position - 2, 0);
+		
+		return path.getCoordinate(maxIndex).subtract(path.getCoordinate(minIndex));
 	}
 
 	/**

@@ -18,24 +18,27 @@ public class Player {
 	PlayerPath path;
 	Puck puck;
 	Team team;
-	Player(int i){
-		id=i;
-		Vector[] pathPoints=getPathPoints(i,Team.HOME);
-		path=new PlayerPath(pathPoints);
-	}
+
 	Player(int i,AIBase base,Team team){
 		id=i;
 		this.team = team;
-		this.puck=base.getPuck();
-		Vector[] pathPoints=getPathPoints(i,team);
-		path=new PlayerPath(pathPoints);
+		this.puck = base.getPuck();
+		
+		int teamId = team == Team.HOME ? 0 : 1;
+		String fileName = String.format("src/resources/player%d%d.txt", teamId, id);
+		
+		try {
+			path = new PlayerPath(fileName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
+	
 	void setState(int pos,int rot){
 		this.currentRot=rot*360/255;
 		this.currentPos=pos;
 		this.location=path.getCoordinate(pos);
 	}
-	
 	
 	public int getCurrentRot() {
 		return currentRot;
@@ -49,31 +52,7 @@ public class Player {
 	public int getId(){
 		return id;
 	}
-	Vector[] getPathPoints(int id,Team team){
-		Vector[] points=null;
-		int teamId = team == Team.HOME ? 0 : 1;
-		ArrayList<Vector> x = new ArrayList<Vector>();
-		try {
-			String fileName = String.format("src/resources/player%d%d.txt", teamId, id);
-			Scanner fileScan = new Scanner(new File(fileName));
-			fileScan.useLocale(Locale.US);
-			
-			while(fileScan.hasNext()) {
-				x.add(new Vector(fileScan.nextDouble(), fileScan.nextDouble()));
-			}
-			points=new Vector[x.size()];
-			
-			x.toArray(points);
-			
-
-		}
-		
-		catch(FileNotFoundException e) {
-			System.out.println(e.getMessage());
-		}
-		
-		return points;
-	}
+	
 	public double getAngleToPuck(){
 		return getAngleToPoint(puck);
 	}
@@ -88,20 +67,12 @@ public class Player {
 		//return getDistanceToPoint();
 	//}
 	
-	public boolean canReachPuck(Puck p){
+	/*public boolean canReachPuck(Puck p){
 		return path.canPlayerReachPuck(p);
-	}
+	}*/
 	
 	public String toString(){
 		return "player "+id+"\tpos:"+this.getCurrentPos()+"\trot: "+this.getCurrentRot();
-	}
-	public static void main(String[] args) throws InterruptedException{
-		Player p= new Player(3);
-		for(int i=1;i<255;i=(i+10)){
-			p.setState(i,0);
-			System.out.println("pos: "+i+"\t"+p.getLocation());
-			Thread.sleep(100);
-		}
 	}
 	
 	

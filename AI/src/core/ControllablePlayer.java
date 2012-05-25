@@ -73,7 +73,7 @@ public class ControllablePlayer extends Player {
 
 	public PrimitiveOrder scootAndShoot() {
 		Vector puckVec = new Vector(puck.getX(), puck.getY());
-		int closePos = (int) path.getInterceptPosition(puckVec);
+		int closePos = (int) path.getClosestPosition(puckVec);
 		if (Math.abs(getTargetPos() - closePos) > 5) {
 			targetPos = closePos;
 			rotSpeed = 0;
@@ -242,16 +242,7 @@ public class ControllablePlayer extends Player {
 		double y = (y2 - y1) / (x2 - x1) * (x - x1) + y1;
 		
 		Vector vecIntersection = new Vector(x, y);
-		double minDistance = Double.MAX_VALUE;
-		int minDistanceIndex = -1;
-		for (int i = 0; i < 255; i++) {
-			double distance = path.getCoordinate(i).subtract(vecIntersection).norm();
-			if (distance < minDistance) {
-				
-				minDistance = distance;
-				minDistanceIndex = i;
-			}
-		}
+		int minDistanceIndex = path.getClosestPosition(vecIntersection);
 		
 		long time = System.currentTimeMillis();
 		

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -17,11 +18,11 @@ public class PlayerNumberPane extends JPanel implements ActionListener{
 	String[] alternatives={"0","1","2","3","4","5"};
 	JComboBox playerSelect;
 	int currentPlayer=0;
-	LinkedList<ControllablePlayer> playerList ;
+	List<ControllablePlayer> playerList ;
 	ArrayList<PlayerPanel> playerPanels= new ArrayList<PlayerPanel>();
-	PlayerNumberPane(LinkedList<ControllablePlayer> linkedList){
+	PlayerNumberPane(List<ControllablePlayer> list){
 		//setSize(100,50);
-		playerList=linkedList;
+		playerList=list;
 		playerSelect=new JComboBox(alternatives);
 		playerSelect.setSelectedIndex(currentPlayer);
 		add(new JLabel("Player"));

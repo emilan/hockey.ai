@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
-import util.Vector;
-
 public class PlayerPath {
 	Vector[] locations = new Vector[256];
 	

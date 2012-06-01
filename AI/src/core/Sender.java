@@ -27,7 +27,7 @@ public class Sender extends OrderList {
 	public void send() throws IOException{
 		
 		if(!isEmpty()){
-			//System.out.print(this);
+			//System.out.print("Sending " + this);
 			byte[] buf=getBytes();
 			
 			DatagramPacket data = new DatagramPacket(buf,buf.length,destination);

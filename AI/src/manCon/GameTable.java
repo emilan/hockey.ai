@@ -54,12 +54,7 @@ public class GameTable extends JPanel {
         }
         
         puck.paint((Graphics2D) g);
-        g.translate(-400, -150);
-        g.drawString("PUCK: " + puck.toString() , 10, 10);
-        for (int i = 0; i < players.length; i++) 
-        	g.drawString("Player" + i + ": " + players[i].player.getCurrentPos(), 10, 30 + i * 20);
-        
-    }
+    }    
     public static void main(String[] arg){
     	
     }

@@ -9,6 +9,7 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 /**
  * Class
  * @author Anders Ryndel
@@ -17,13 +18,15 @@ import java.util.LinkedList;
 public abstract class AIBase implements Updateable{
 	private int gamePort;
 	private int localPort;
-	private Reciever reciever;
+	protected Reciever reciever;
 	private Sender sender;
-	private Team team;
-	private LinkedList<ControllablePlayer> friendlyPlayers=new LinkedList<ControllablePlayer>();
-	private LinkedList<Player> opposingPlayers=new LinkedList<Player>();
-	private Puck puck;
-	private int gameTime=0;
+	protected Team team;
+	protected LinkedList<ControllablePlayer> friendlyPlayers=new LinkedList<ControllablePlayer>();
+	protected LinkedList<Player> opposingPlayers=new LinkedList<Player>();
+	protected Puck puck;
+	protected int gameTime=0;
+	int myGoals = 0;
+	int enemyGoals = 0;
 	Date d=new Date();
 	/**
 	 * Creates and initaializes basic AI functionality and connects it to the game at the selected adress
@@ -38,15 +41,17 @@ public abstract class AIBase implements Updateable{
 		
 		
 		DatagramSocket socket=doHandshake(localPort, gameAddress);
+		System.out.println("Handshake Done");
 		Team otherTeam;
-		if(getTeam().equals(Team.HOME)){
+		System.out.println("Team: " + team);
+		if(team.equals(Team.HOME)){
 			otherTeam=Team.AWAY;
 		}else{
 			otherTeam=Team.HOME;
 		}
 		for(int i=0;i<6;i++){
-			friendlyPlayers.add(new ControllablePlayer(i,this));
-			opposingPlayers.add(new Player(i,this,otherTeam));
+			friendlyPlayers.add(new ControllablePlayer(i, team, puck));
+			opposingPlayers.add(new Player(i, otherTeam, puck));
 		}
 		System.out.println("handshakedone");
 		sender=new Sender(socket,gameAddress);
@@ -68,8 +73,9 @@ public abstract class AIBase implements Updateable{
 	}
 	@Override
 	public void update(int[] a) {	
-		int i=2;
-		// TODO: My goals in a[0], Opponent goals in a[1]
+		int i=0;
+		myGoals = a[i++];
+		enemyGoals = a[i++];
 		puck.setState(a[i++], a[i++]);
 		gameTime=a[i++];
 	
@@ -94,8 +100,8 @@ public abstract class AIBase implements Updateable{
 		onNewState();
 	}
 	private DatagramSocket doHandshake(int localPort,SocketAddress gameAddress) throws IOException{
-		DatagramSocket socket;
-	
+		DatagramSocket socket = null;
+		System.out.println("Shaking hands");
 		if(localPort==0){
 			socket=new DatagramSocket();
 		}else{
@@ -104,6 +110,7 @@ public abstract class AIBase implements Updateable{
 		
 		//socket.connect(gameAddress);
 		byte[] message="a".getBytes();
+		
 		DatagramPacket data = new DatagramPacket(message, message.length,gameAddress);
 		socket.send(data);
 		DatagramPacket rcv = new DatagramPacket(new byte[1000], 1000);
@@ -119,6 +126,7 @@ public abstract class AIBase implements Updateable{
 			team=Team.HOME;
 		}else if(a==2){
 			team=Team.AWAY;
+			System.out.println("AWAYTEAM");
 		}else{
 			System.out.println("handshake not recieved");
 			System.exit(1);
@@ -134,16 +142,19 @@ public abstract class AIBase implements Updateable{
 	public void addOrder(PrimitiveOrder order){
 		sender.add(order);
 	}
+	public boolean hasOrder(){
+		return sender.size() > 0;
+	}
 	public Puck getPuck(){
 		return puck;
 	}
 	public Team getTeam(){
 		return team;
 	}
-	public LinkedList<ControllablePlayer> getFriendlyPlayers(){
+	public List<ControllablePlayer> getFriendlyPlayers(){
 		return friendlyPlayers;
 	}
-	public LinkedList<Player> getOpposingPlayers(){
+	public List<Player> getOpposingPlayers(){
 		return opposingPlayers;
 	}
 	public abstract void onNewState();

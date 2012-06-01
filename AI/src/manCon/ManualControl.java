@@ -81,7 +81,8 @@ public class ManualControl extends AIBase implements ActionListener{// extends A
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-			PlayerPanel.currentPlayer.sendOrder();
+			addOrder(PlayerPanel.currentPlayer.getOrder());
+			send();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

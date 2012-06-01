@@ -21,8 +21,8 @@ public class Reciever extends Thread{
 		
 		rcv = new DatagramPacket(new byte[1000], 1000);
 		
-		start();
-		
+		start(); // TODO: was started last in PlanningAI constructor
+		System.out.println("Listening");
 	}
 	@Override
 	/**
